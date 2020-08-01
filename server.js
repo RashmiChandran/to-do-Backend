@@ -2,6 +2,11 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
+const corsOptions = {
+    origin: 'http://localhost:4200'
+}
+
 var PORT = process.env.PORT || 3000;
 mongoose.connect('mongodb://localhost:27017/todotask', { useNewUrlParser: true });
 const db = mongoose.connection;
@@ -30,14 +35,14 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Credentials', true);
     next();
 })
-app.get('/', (req, res) => {
+app.get('/', cors(corsOptions),(req, res) => {
     taskList.find((function (err, result) {
         if (err) return console.error(err);
         res.send(JSON.stringify(result));
     }))
 });
 
-app.post('/addTask', (req, res) => {
+app.post('/addTask',cors(corsOptions), (req, res) => {
     const insertTaskList = new taskList({
         taskName: req.body.taskName,
         label: req.body.label,
@@ -51,7 +56,7 @@ app.post('/addTask', (req, res) => {
 });
 
 
-app.delete('/deleteTask/', (req, res) => {
+app.delete('/deleteTask/', cors(corsOptions), (req, res) => {
     console.log(req)
     taskList.deleteOne({ _id: req.query._id }, function (err,success) {
         if (err)  return handleError(err);
@@ -59,7 +64,7 @@ app.delete('/deleteTask/', (req, res) => {
       });
 });
 
-app.put('/updateTask/', (req, res) => {
+app.put('/updateTask/',cors(corsOptions), (req, res) => {
     console.log(req)
     taskList.updateOne({ _id: req.body._id }, req.body, function (err,success) {
         if (err)  return handleError(err);
