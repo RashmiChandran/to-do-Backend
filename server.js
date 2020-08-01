@@ -37,7 +37,7 @@ app.use(function (req, res, next) {
 })
 app.get('/', cors(corsOptions),(req, res) => {
     taskList.find((function (err, result) {
-        if (err) return console.error(err);
+        if (err) res.send(JSON.stringify(err));
         res.send(JSON.stringify(result));
     }))
 });
@@ -50,7 +50,7 @@ app.post('/addTask',cors(corsOptions), (req, res) => {
         status: req.body.status
     });
     insertTaskList.save(function (err, success) {
-        if (err) return console.error(err);
+        if (err) res.send(JSON.stringify(err));
         res.send(success);
     });
 });
@@ -59,7 +59,7 @@ app.post('/addTask',cors(corsOptions), (req, res) => {
 app.delete('/deleteTask/', cors(corsOptions), (req, res) => {
     console.log(req)
     taskList.deleteOne({ _id: req.query._id }, function (err,success) {
-        if (err)  return handleError(err);
+        if (err)  res.send(handleError(err));
         res.send(success);
       });
 });
@@ -67,7 +67,7 @@ app.delete('/deleteTask/', cors(corsOptions), (req, res) => {
 app.put('/updateTask/',cors(corsOptions), (req, res) => {
     console.log(req)
     taskList.updateOne({ _id: req.body._id }, req.body, function (err,success) {
-        if (err)  return handleError(err);
+        if (err)  res.send(handleError(err));
         res.send(success);
       });
 });
