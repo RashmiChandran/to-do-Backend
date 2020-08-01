@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-
+var PORT = process.env.PORT || 3000;
 mongoose.connect('mongodb://localhost:27017/todotask', { useNewUrlParser: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
@@ -18,8 +18,8 @@ const taskListSchema = new mongoose.Schema({
 });
 
 const taskList = mongoose.model('tasksList', taskListSchema);
-app.listen(3000, function () {
-    console.log('listening on 3000')
+app.listen(PORT, function () {
+    console.log('listening on', PORT)
 });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); 
