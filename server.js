@@ -8,7 +8,7 @@ const corsOptions = {
 }
 
 var PORT = process.env.PORT || 3000;
-mongoose.connect('mongodb://localhost:27017/todotask', { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/todotask', { useNewUrlParser: true });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
