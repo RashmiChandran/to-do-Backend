@@ -8,7 +8,16 @@ const corsOptions = {
 }
 
 var PORT = process.env.PORT || 3000;
-mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/todotask', { useNewUrlParser: true });
+const connectWithRetry = () => {
+mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost:27017/todotask', { useNewUrlParser: true }).then(()=>{
+    console.log('MongoDB is connected')
+  }).catch(err=>{
+    console.log('MongoDB connection unsuccessful, retry after 5 seconds.')
+    setTimeout(connectWithRetry, 5000)
+  })
+};
+
+connectWithRetry()
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
